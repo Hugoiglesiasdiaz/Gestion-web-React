@@ -71,3 +71,5 @@ export default defineConfig([
   },
 ])
 ```
+
+Durante la implementación uno de los requisitos era usar filtrado de api, el problema es que llamadas como por ejemplo realizar una busqueda de la palabra Moto para encontrar moviles motorola la api devuelve también un movil de xiaomi lo cual es un error conocido y que para arreglar habría que hacer un filtro en el frontend lo cual va en contra de los requisitos.

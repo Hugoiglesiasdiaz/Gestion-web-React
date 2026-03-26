@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Extraemos las variables de configuración al principio para mantener el código más limpio
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+const API_URL = import.meta.env.VITE_API_URL || 'https://prueba-tecnica-api-tienda-moviles.onrender.com';
 const API_KEY = import.meta.env.VITE_API_KEY || '';
 
 // Creamos una instancia de Axios estructurada
