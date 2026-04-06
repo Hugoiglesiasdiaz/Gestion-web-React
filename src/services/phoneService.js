@@ -56,29 +56,31 @@ import axiosClient from '../api/axiosClient';
 
 /**
  * Transforma un error de axios al formato ErrorEntity
- * @param {any} error 
+ * @param {any} error
  * @returns {ErrorEntity}
  */
 const translateErrorToEntity = (error) => {
   if (error.response && error.response.data) {
     return {
-      error: "API_ERROR",
-      message: error.response.data.message || 'Error interno de la API.'
+      error: 'API_ERROR',
+      message: error.response.data.message || 'Error interno de la API.',
     };
   }
   return {
-    error: "NETWORK_ERROR",
-    message: error.message || 'Error de conexión.'
+    error: 'NETWORK_ERROR',
+    message: error.message || 'Error de conexión.',
   };
 };
 
 export const phoneService = {
   /**
-   * Obtiene la lista de todos los productos directamente de la API.
+   * Obtiene la lista de todos los productos de la API (Limitado a 20).
    */
   getProducts: async () => {
     try {
-      const response = await axiosClient.get('/products');
+      const response = await axiosClient.get('/products', {
+        params: { limit: 20 },
+      });
       return response.data;
     } catch (error) {
       throw translateErrorToEntity(error);
@@ -86,12 +88,15 @@ export const phoneService = {
   },
 
   /**
-   * Busca productos por nombre o marca usando filtrado por API.
+   * Busca productos por nombre o marca usando filtrado por API (Limitado a 20).
    */
   searchProducts: async (query) => {
     try {
       const response = await axiosClient.get('/products', {
-        params: { search: query }
+        params: {
+          search: query,
+          limit: 20,
+        },
       });
       return response.data;
     } catch (error) {
@@ -101,7 +106,7 @@ export const phoneService = {
 
   /**
    * Obtiene el producto por ID.
-   * @param {string} id 
+   * @param {string} id
    * @returns {Promise<ProductEntity | ErrorEntity>}
    */
   getProductById: async (id) => {
@@ -121,11 +126,11 @@ export const phoneService = {
       const response = await axiosClient.post('/cart', {
         id,
         colorCode,
-        storageCode
+        storageCode,
       });
       return response.data;
     } catch (error) {
       return translateErrorToEntity(error);
     }
-  }
+  },
 };
