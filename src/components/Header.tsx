@@ -9,16 +9,16 @@ export default function Header() {
     <header className="fixed top-0 left-0 w-full bg-white z-50 border-b border-gray-100 h-20">
       <div className="max-w-[1440px] mx-auto h-full px-10 flex justify-between items-center">
         {/* Logo Inicio */}
-        <Link 
-          to="/" 
+        <Link
+          to="/"
           className="text-3xl font-black tracking-tighter uppercase select-none text-black hover:opacity-70 transition-opacity"
         >
           MBST
         </Link>
 
         {/* Icono Carrito */}
-        <Link 
-          to="/cart" 
+        <Link
+          to="/cart"
           className="relative group cursor-pointer hover:opacity-70 transition-opacity"
         >
           <ShoppingBag className="w-6 h-6 text-black stroke-[1.5px]" />

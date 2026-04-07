@@ -6,47 +6,15 @@ import { Button } from '@/components/ui/button';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import { Loader2, AlertCircle, RefreshCcw } from 'lucide-react';
 
+import ProductCard from '@/components/ProductCard';
+
 export interface Product {
   id: string;
   brand: string;
   name: string;
   basePrice: number;
-  imgUrl: string; // Intentamos con imgUrl que es común en esta API
+  imgUrl: string;
 }
-
-/**
- * Componente de tarjeta integrado
- */
-const ProductCard: React.FC<{ phone: Product }> = ({ phone }) => {
-  return (
-    <div className="bg-white border-[0.5px] border-gray-100 flex flex-col relative group cursor-pointer transition-colors duration-300">
-      {/* Contenedor de Imagen (Cuadrado Perfecto) */}
-      <div className="aspect-square w-full relative overflow-hidden bg-white">
-        <img
-          src={phone.imgUrl || (phone as any).imageUrl || (phone as any).image}
-          alt={`${phone.brand} ${phone.name}`}
-          className="absolute inset-0 w-full h-full object-contain p-10"
-          loading="lazy"
-        />
-      </div>
-
-      {/* Textos en la parte inferior */}
-      <div className="flex justify-between items-end w-full px-2 pb-4 mt-auto">
-        <div className="flex flex-col">
-          <span className="text-gray-400 text-[10px] uppercase tracking-widest">
-            {phone.brand}
-          </span>
-          <span className="text-black text-[12px] uppercase tracking-widest">
-            {phone.name}
-          </span>
-        </div>
-        <span className="text-black text-[12px] whitespace-nowrap">
-          {phone.basePrice} EUR
-        </span>
-      </div>
-    </div>
-  );
-};
 
 /**
  * Grid de Skeletons refinado
@@ -82,10 +50,12 @@ export default function ListPage() {
       setError(null);
       const data = await phoneService.getProducts();
       if (mounted) setProducts(data || []);
-    } catch (err: any) {
+    } catch (err: unknown) {
       if (mounted) {
         setError(
-          err.message || 'The product catalog is currently unreachable.',
+          err instanceof Error
+            ? err.message
+            : 'The product catalog is currently unreachable.',
         );
       }
     } finally {
@@ -113,8 +83,10 @@ export default function ListPage() {
         data = await phoneService.searchProducts(query.trim());
       }
       setProducts(data || []);
-    } catch (err: any) {
-      setSearchError(err.message || 'Search service is unstable.');
+    } catch (err: unknown) {
+      setSearchError(
+        err instanceof Error ? err.message : 'Search service is unstable.',
+      );
       if (searchErrorTimerRef.current)
         window.clearTimeout(searchErrorTimerRef.current);
       searchErrorTimerRef.current = window.setTimeout(
@@ -130,7 +102,10 @@ export default function ListPage() {
     const value = e.target.value;
     setSearchQuery(value);
     if (debounceTimerRef.current) window.clearTimeout(debounceTimerRef.current);
-    debounceTimerRef.current = window.setTimeout(() => performSearch(value), 400);
+    debounceTimerRef.current = window.setTimeout(
+      () => performSearch(value),
+      400,
+    );
   };
 
   // Error State Template
@@ -166,7 +141,6 @@ export default function ListPage() {
       <div className="max-w-[1440px] mx-auto px-10">
         {/* Luxury Navigation Header - Identity Exacta Foto 2 */}
         <nav className="pt-24 pb-16 flex flex-col bg-transparent">
-
           {/* High Clarity Search Bar - Exact Identity Foto 2 */}
           <div className="w-full relative group my-6">
             <div className="relative w-full">
@@ -212,7 +186,11 @@ export default function ListPage() {
           ) : (
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-0 bg-white border-t border-gray-100">
               {products.map((product, index) => (
-                <Link key={`${product.id}-${index}`} to={`/${product.id}`} className="block">
+                <Link
+                  key={`${product.id}-${index}`}
+                  to={`/${product.id}`}
+                  className="block"
+                >
                   <ProductCard phone={product} />
                 </Link>
               ))}
