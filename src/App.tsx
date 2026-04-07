@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import ListPage from "./pages/ListPage";
-import DetailPage from "./pages/DetailPage";
-import CartPage from "./pages/CartPage";
-import Header from "./components/Header";
-import { CartProvider } from "./context/CartContext";
+import ListPage from './pages/ListPage';
+import DetailPage from './pages/DetailPage';
+import CartPage from './pages/CartPage';
+import Header from './components/Header';
+import { CartProvider } from './context/CartContext';
 
 function App() {
   return (

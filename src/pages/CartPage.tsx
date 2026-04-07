@@ -12,7 +12,8 @@ const MOCK_CART_ITEMS = [
     color: 'Natural Titanium',
     storage: '256GB',
     price: 1399,
-    imgUrl: 'https://cdn.pixabay.com/photo/2016/11/29/12/30/android-1869510_1280.jpg',
+    imgUrl:
+      'https://cdn.pixabay.com/photo/2016/11/29/12/30/android-1869510_1280.jpg',
   },
   {
     id: 's24-ultra-1',
@@ -21,7 +22,8 @@ const MOCK_CART_ITEMS = [
     color: 'Titanium Black',
     storage: '512GB',
     price: 1459,
-    imgUrl: 'https://cdn.pixabay.com/photo/2013/07/12/18/39/smartphone-153650_1280.png',
+    imgUrl:
+      'https://cdn.pixabay.com/photo/2013/07/12/18/39/smartphone-153650_1280.png',
   },
 ];
 
@@ -42,7 +44,6 @@ export default function CartPage() {
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-20">
-          
           {/* Columna Izquierda: Lista de Productos (8/12) */}
           <div className="lg:col-span-8 space-y-0">
             {MOCK_CART_ITEMS.length === 0 ? (
@@ -50,18 +51,24 @@ export default function CartPage() {
                 <p className="text-[10px] uppercase tracking-[0.4em] text-gray-300 font-extralight mb-10">
                   Your cart is currently empty
                 </p>
-                <Link to="/" className="text-[10px] uppercase tracking-[0.2em] border-b border-black pb-1 hover:text-gray-400 hover:border-gray-400 transition-colors">
+                <Link
+                  to="/"
+                  className="text-[10px] uppercase tracking-[0.2em] border-b border-black pb-1 hover:text-gray-400 hover:border-gray-400 transition-colors"
+                >
                   Browse Collection
                 </Link>
               </div>
             ) : (
               MOCK_CART_ITEMS.map((item) => (
-                <div key={item.id} className="flex flex-col md:flex-row items-center border-t-[0.5px] border-gray-100 py-10 group">
+                <div
+                  key={item.id}
+                  className="flex flex-col md:flex-row items-center border-t-[0.5px] border-gray-100 py-10 group"
+                >
                   {/* Miniatura */}
                   <div className="w-32 aspect-square relative overflow-hidden bg-white mb-6 md:mb-0 md:mr-10">
-                    <img 
-                      src={item.imgUrl} 
-                      alt={item.name} 
+                    <img
+                      src={item.imgUrl}
+                      alt={item.name}
                       className="w-full h-full object-contain p-4"
                     />
                   </div>
@@ -77,10 +84,12 @@ export default function CartPage() {
                       </h2>
                       <div className="flex flex-col space-y-0.5 pt-2">
                         <span className="text-[10px] text-gray-400 uppercase tracking-widest font-light">
-                          Color: <span className="text-gray-600">{item.color}</span>
+                          Color:{' '}
+                          <span className="text-gray-600">{item.color}</span>
                         </span>
                         <span className="text-[10px] text-gray-400 uppercase tracking-widest font-light">
-                          Storage: <span className="text-gray-600">{item.storage}</span>
+                          Storage:{' '}
+                          <span className="text-gray-600">{item.storage}</span>
                         </span>
                       </div>
                     </div>
@@ -107,7 +116,7 @@ export default function CartPage() {
               <h3 className="text-[10px] uppercase tracking-[0.4em] font-bold text-black border-b border-gray-50 pb-4">
                 Order Summary
               </h3>
-              
+
               <div className="space-y-4">
                 <div className="flex justify-between text-[11px] uppercase tracking-widest font-light">
                   <span className="text-gray-400">Subtotal</span>
@@ -120,8 +129,12 @@ export default function CartPage() {
               </div>
 
               <div className="border-t border-gray-100 pt-6 flex justify-between items-end">
-                <span className="text-[10px] uppercase tracking-[0.4em] font-bold">Total</span>
-                <span className="text-2xl font-light tabular-nums tracking-widest">{total} EUR</span>
+                <span className="text-[10px] uppercase tracking-[0.4em] font-bold">
+                  Total
+                </span>
+                <span className="text-2xl font-light tabular-nums tracking-widest">
+                  {total} EUR
+                </span>
               </div>
 
               <div className="pt-4 space-y-4">
@@ -129,9 +142,9 @@ export default function CartPage() {
                   Checkout
                   <ArrowRight className="w-4 h-4 ml-3 stroke-[1.5px] group-hover:translate-x-2 transition-transform" />
                 </button>
-                
-                <Link 
-                  to="/" 
+
+                <Link
+                  to="/"
                   className="w-full border border-gray-100 text-black py-4 uppercase text-[10px] tracking-[0.4em] font-light hover:border-black transition-colors flex items-center justify-center"
                 >
                   Continue Shopping
@@ -146,7 +159,6 @@ export default function CartPage() {
               </p>
             </div>
           </aside>
-
         </div>
       </main>
     </div>
