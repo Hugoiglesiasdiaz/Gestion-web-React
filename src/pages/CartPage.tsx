@@ -1,162 +1,162 @@
+import { useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { X, ArrowRight } from 'lucide-react';
-
-/**
- * Mock Data para previsualización del Carrito
- */
-const MOCK_CART_ITEMS = [
-  {
-    id: 'iphone-15-pro-1',
-    brand: 'Apple',
-    name: 'iPhone 15 Pro Max',
-    color: 'Natural Titanium',
-    storage: '256GB',
-    price: 1399,
-    imgUrl:
-      'https://cdn.pixabay.com/photo/2016/11/29/12/30/android-1869510_1280.jpg',
-  },
-  {
-    id: 's24-ultra-1',
-    brand: 'Samsung',
-    name: 'Galaxy S24 Ultra',
-    color: 'Titanium Black',
-    storage: '512GB',
-    price: 1459,
-    imgUrl:
-      'https://cdn.pixabay.com/photo/2013/07/12/18/39/smartphone-153650_1280.png',
-  },
-];
+import { useCart } from '../context/CartContext';
 
 export default function CartPage() {
-  const total = MOCK_CART_ITEMS.reduce((sum, item) => sum + item.price, 0);
+  const { cartItems, removeFromCart } = useCart();
+
+  const total = useMemo(() => {
+    return cartItems.reduce((sum, item) => sum + item.price, 0);
+  }, [cartItems]);
+
+  const formattedTotal = total.toLocaleString('es-ES', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 
   return (
     <div className="min-h-screen bg-white font-sans selection:bg-black selection:text-white pb-32">
-      {/* Espaciado para el Header fijo */}
-      <div className="h-20" />
+      {/* Spacer for fixed header */}
+      <div className="h-24 md:h-32" />
 
-      <main className="max-w-[1440px] mx-auto px-10 lg:px-24 pt-16">
-        {/* Header de la página */}
-        <header className="mb-16 border-b border-gray-100 pb-8">
-          <h1 className="text-2xl font-light uppercase tracking-[0.3em] text-black">
-            Cart ({MOCK_CART_ITEMS.length} Items)
+      <main className="max-w-[1440px] mx-auto px-6 md:px-12 lg:px-24">
+        {/* Page Header */}
+        <header className="mb-12">
+          <h1 className="text-xl font-light uppercase tracking-widest text-black">
+            Your Bag ({cartItems.length})
           </h1>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-20">
-          {/* Columna Izquierda: Lista de Productos (8/12) */}
-          <div className="lg:col-span-8 space-y-0">
-            {MOCK_CART_ITEMS.length === 0 ? (
-              <div className="py-20 text-center border-t border-gray-50">
-                <p className="text-[10px] uppercase tracking-[0.4em] text-gray-300 font-extralight mb-10">
-                  Your cart is currently empty
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+          {/* Left Column: Products List */}
+          <div className="lg:col-span-8">
+            {cartItems.length === 0 ? (
+              <div className="py-32 flex flex-col items-center justify-center border-t-[0.5px] border-gray-200">
+                <p className="text-[11px] uppercase tracking-[0.5em] text-gray-400 font-light mb-12">
+                  YOUR BAG IS EMPTY
                 </p>
                 <Link
                   to="/"
-                  className="text-[10px] uppercase tracking-[0.2em] border-b border-black pb-1 hover:text-gray-400 hover:border-gray-400 transition-colors"
+                  className="text-[11px] uppercase tracking-widest font-light border-b border-black pb-1 hover:text-gray-500 hover:border-gray-500 transition-colors"
                 >
                   Browse Collection
                 </Link>
               </div>
             ) : (
-              MOCK_CART_ITEMS.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex flex-col md:flex-row items-center border-t-[0.5px] border-gray-100 py-10 group"
-                >
-                  {/* Miniatura */}
-                  <div className="w-32 aspect-square relative overflow-hidden bg-white mb-6 md:mb-0 md:mr-10">
-                    <img
-                      src={item.imgUrl}
-                      alt={item.name}
-                      className="w-full h-full object-contain p-4"
-                    />
-                  </div>
+              <div className="border-t-[0.5px] border-gray-200">
+                {cartItems.map((item, index) => (
+                  <div
+                    key={`${item.id}-${item.colorName}-${item.capacity}-${index}`}
+                    className="flex flex-col sm:flex-row items-start sm:items-center py-10 border-b-[0.5px] border-gray-200 group"
+                  >
+                    {/* Image Container */}
+                    <div className="w-full sm:w-32 aspect-square shrink-0 bg-white mb-6 sm:mb-0 sm:mr-10">
+                      <img
+                        src={item.imageUrl}
+                        alt={item.name}
+                        className="w-full h-full object-contain p-2"
+                      />
+                    </div>
 
-                  {/* Info del Producto */}
-                  <div className="flex-grow flex flex-col md:flex-row justify-between w-full">
-                    <div className="space-y-1 text-center md:text-left mb-6 md:mb-0">
-                      <p className="text-[10px] text-gray-400 uppercase tracking-[0.4em] font-light">
-                        {item.brand}
-                      </p>
-                      <h2 className="text-[14px] font-extralight uppercase tracking-widest text-black">
-                        {item.name}
-                      </h2>
-                      <div className="flex flex-col space-y-0.5 pt-2">
-                        <span className="text-[10px] text-gray-400 uppercase tracking-widest font-light">
-                          Color:{' '}
-                          <span className="text-gray-600">{item.color}</span>
+                    {/* Product Info */}
+                    <div className="grow flex flex-col sm:flex-row justify-between w-full items-start sm:items-center">
+                      <div className="space-y-1 mb-6 sm:mb-0">
+                        <p className="text-[10px] text-gray-400 uppercase tracking-widest font-light">
+                          {item.brand}
+                        </p>
+                        <h2 className="text-[13px] font-light uppercase tracking-[0.2em] text-black">
+                          {item.name}
+                        </h2>
+                        <div className="flex flex-col space-y-0.5 pt-1">
+                          <span className="text-[10px] text-gray-500 uppercase tracking-widest font-light">
+                            {item.colorName} / {item.capacity}
+                          </span>
+                        </div>
+                      </div>
+
+                      {/* Price & Remove */}
+                      <div className="flex flex-row sm:flex-col justify-between items-center sm:items-end w-full sm:w-auto mt-4 sm:mt-0">
+                        <span className="text-[13px] font-light tracking-widest text-black tabular-nums">
+                          {item.price.toLocaleString('es-ES', {
+                            minimumFractionDigits: 2,
+                          })}{' '}
+                          EUR
                         </span>
-                        <span className="text-[10px] text-gray-400 uppercase tracking-widest font-light">
-                          Storage:{' '}
-                          <span className="text-gray-600">{item.storage}</span>
-                        </span>
+                        <button
+                          onClick={() =>
+                            removeFromCart(
+                              item.id,
+                              item.colorName,
+                              item.capacity,
+                            )
+                          }
+                          className="text-[9px] uppercase tracking-widest text-gray-400 hover:text-black mt-0 sm:mt-4 transition-colors flex items-center"
+                        >
+                          <X className="w-3 h-3 mr-1 stroke-[1.5px]" />
+                          Remove
+                        </button>
                       </div>
                     </div>
-
-                    {/* Precio y Acción */}
-                    <div className="flex flex-row md:flex-col justify-between items-center md:items-end md:ml-10">
-                      <span className="text-[14px] font-light tabular-nums tracking-widest text-black">
-                        {item.price} EUR
-                      </span>
-                      <button className="text-[10px] uppercase tracking-[0.3em] text-gray-300 hover:text-black mt-0 md:mt-auto transition-colors flex items-center group/btn">
-                        <X className="w-3 h-3 mr-2 stroke-[1.5px] group-hover/btn:rotate-90 transition-transform" />
-                        Remove
-                      </button>
-                    </div>
                   </div>
-                </div>
-              ))
+                ))}
+              </div>
             )}
           </div>
 
-          {/* Columna Derecha: Resumen de Pedido (4/12) */}
-          <aside className="lg:col-span-4 space-y-12">
-            <div className="bg-white border-[0.5px] border-gray-100 p-10 space-y-8">
-              <h3 className="text-[10px] uppercase tracking-[0.4em] font-bold text-black border-b border-gray-50 pb-4">
-                Order Summary
-              </h3>
+          {/* Right Column: Order Summary */}
+          <aside className="lg:col-span-4 lg:sticky lg:top-32 h-fit">
+            <div className="space-y-10">
+              <div className="border-t-[0.5px] border-gray-200 pt-10">
+                <h3 className="text-[11px] uppercase tracking-widest font-light text-black mb-10">
+                  Summary
+                </h3>
 
-              <div className="space-y-4">
-                <div className="flex justify-between text-[11px] uppercase tracking-widest font-light">
-                  <span className="text-gray-400">Subtotal</span>
-                  <span className="text-black tabular-nums">{total} EUR</span>
+                <div className="space-y-6">
+                  <div className="flex justify-between text-[11px] uppercase tracking-widest font-light">
+                    <span className="text-gray-500">Subtotal</span>
+                    <span className="text-black tabular-nums">
+                      {formattedTotal} EUR
+                    </span>
+                  </div>
+                  <div className="flex justify-between text-[11px] uppercase tracking-widest font-light">
+                    <span className="text-gray-500">Shipping</span>
+                    <span className="text-black uppercase">Complementary</span>
+                  </div>
                 </div>
-                <div className="flex justify-between text-[11px] uppercase tracking-widest font-light">
-                  <span className="text-gray-400">Shipping</span>
-                  <span className="text-black uppercase">Free</span>
+
+                <div className="border-t border-gray-100 mt-10 pt-8 flex justify-between items-end">
+                  <span className="text-[11px] uppercase tracking-widest font-light">
+                    Total
+                  </span>
+                  <span className="text-xl font-light tabular-nums tracking-widest">
+                    {formattedTotal} EUR
+                  </span>
                 </div>
               </div>
 
-              <div className="border-t border-gray-100 pt-6 flex justify-between items-end">
-                <span className="text-[10px] uppercase tracking-[0.4em] font-bold">
-                  Total
-                </span>
-                <span className="text-2xl font-light tabular-nums tracking-widest">
-                  {total} EUR
-                </span>
-              </div>
-
-              <div className="pt-4 space-y-4">
-                <button className="w-full bg-black text-white py-5 uppercase text-[12px] tracking-[0.5em] font-light hover:bg-gray-900 transition-colors flex items-center justify-center group">
-                  Checkout
-                  <ArrowRight className="w-4 h-4 ml-3 stroke-[1.5px] group-hover:translate-x-2 transition-transform" />
+              <div className="space-y-3">
+                <button className="w-full bg-black text-white py-5 uppercase text-[11px] tracking-widest font-light hover:bg-neutral-800 transition-colors flex items-center justify-center group overflow-hidden">
+                  <span className="relative group-hover:translate-x-1 transition-transform inline-flex items-center">
+                    Purchase
+                    <ArrowRight className="w-4 h-4 ml-3 stroke-[1.5px]" />
+                  </span>
                 </button>
 
                 <Link
                   to="/"
-                  className="w-full border border-gray-100 text-black py-4 uppercase text-[10px] tracking-[0.4em] font-light hover:border-black transition-colors flex items-center justify-center"
+                  className="w-full border border-gray-200 text-black py-4 uppercase text-[10px] tracking-widest font-light hover:border-black transition-colors flex items-center justify-center"
                 >
                   Continue Shopping
                 </Link>
               </div>
-            </div>
 
-            {/* Banner Opcional de Ayuda */}
-            <div className="px-4 text-center">
-              <p className="text-[9px] uppercase tracking-[0.3em] text-gray-300 font-light">
-                Secure payment & Free worldwide returns
-              </p>
+              <div className="pt-8 border-t border-gray-50">
+                <p className="text-[9px] uppercase tracking-[0.2em] text-gray-400 font-light leading-relaxed">
+                  Support available from Mon–Fri 9am–6pm. <br />
+                  Secure checkout powered by Stripe.
+                </p>
+              </div>
             </div>
           </aside>
         </div>

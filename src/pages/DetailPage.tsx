@@ -177,7 +177,7 @@ export default function DetailPage() {
       <div className="max-w-[1440px] mx-auto px-10 lg:px-24 pt-10 pb-6">
         <Link
           to="/"
-          className="text-xs uppercase tracking-[0.4em] text-gray-400 hover:text-black transition-colors flex items-center group font-thin"
+          className="text-xs uppercase tracking-widest text-gray-400 hover:text-black transition-colors flex items-center group font-thin"
         >
           <ArrowLeft className="w-3.5 h-3.5 mr-2 stroke-[1px] group-hover:-translate-x-1 transition-transform" />
           BACK
@@ -200,7 +200,7 @@ export default function DetailPage() {
           <div className="lg:col-span-5 space-y-12">
             {/* Título y Precio */}
             <header className="space-y-4">
-              <h1 className="text-3xl font-extralight uppercase tracking-[0.2em] text-[#000000]">
+              <h1 className="text-3xl font-extralight uppercase tracking-widest text-[#000000]">
                 {product.name}
               </h1>
               <p className="text-xl font-extralight text-[#000000] tracking-widest tabular-nums">
@@ -213,7 +213,7 @@ export default function DetailPage() {
 
             {/* Selector de Storage */}
             <div className="space-y-6">
-              <p className="text-[11px] font-thin uppercase tracking-[0.2em] text-[#000000]">
+              <p className="text-[11px] font-extralight uppercase tracking-widest text-[#000000]">
                 STORAGE. ¿HOW MUCH SPACE DO YOU NEED?
               </p>
               <div className="grid grid-cols-3 gap-3">
@@ -235,7 +235,7 @@ export default function DetailPage() {
 
             {/* Selector de Color */}
             <div className="space-y-6">
-              <p className="text-[11px] font-thin uppercase tracking-[0.2em] text-[#000000]">
+              <p className="text-[11px] font-extralight uppercase tracking-widest text-[#000000]">
                 COLOR. PICK YOUR FAVOURITE.
               </p>
               <div className="space-y-4">
@@ -258,7 +258,7 @@ export default function DetailPage() {
                   ))}
                 </div>
                 {/* Nombre del color seleccionado - Única negrita permitida */}
-                <span className="text-[11px] text-[#000000] font-bold uppercase tracking-widest block">
+                <span className="text-[11px] text-[#000000] font-light uppercase tracking-widest block">
                   {selectedColor?.name}
                 </span>
               </div>
@@ -267,7 +267,7 @@ export default function DetailPage() {
             {/* Botón Añadir */}
             <button
               onClick={handleAddToCart}
-              className="w-full bg-[#000000] text-white py-6 uppercase text-[12px] tracking-[0.5em] font-extralight hover:bg-neutral-900 transition-colors"
+              className="w-full bg-[#000000] text-white py-6 uppercase text-[12px] tracking-widest font-extralight hover:bg-neutral-900 transition-colors"
             >
               Añadir
             </button>
@@ -290,7 +290,7 @@ export default function DetailPage() {
                 key={spec.label}
                 className={`flex py-5 border-t-[0.5px] border-gray-300 ${spec.label === 'DESCRIPTION' ? 'items-start' : 'items-center'}`}
               >
-                <div className="w-1/3 text-[10px] font-normal uppercase text-black">
+                <div className="w-1/3 text-[10px] font-light uppercase text-black">
                   {spec.label}
                 </div>
                 <div className="flex-1 text-[11px] font-light text-gray-900">
@@ -304,7 +304,7 @@ export default function DetailPage() {
 
         {/* Productos Similares */}
         <section className="mb-20">
-          <h2 className="text-xs font-bold uppercase tracking-[0.5em] text-[#000000] mb-16">
+          <h2 className="text-xs font-light uppercase tracking-widest text-[#000000] mb-16">
             SIMILAR ITEMS
           </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-0 border-t border-gray-100">
