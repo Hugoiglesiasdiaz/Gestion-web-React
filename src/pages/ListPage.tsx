@@ -117,7 +117,7 @@ export default function ListPage() {
           className="max-w-md rounded-none border-2 border-red-500 bg-white"
         >
           <AlertCircle className="h-4 w-4" />
-          <AlertTitle className="uppercase tracking-widest text-xs font-extralight">
+          <AlertTitle className="uppercase tracking-widest text-xs font-light">
             System Failure
           </AlertTitle>
           <AlertDescription className="text-gray-500 text-[11px] mt-2 mb-4">
@@ -126,7 +126,7 @@ export default function ListPage() {
           <Button
             variant="outline"
             onClick={() => window.location.reload()}
-            className="rounded-none border-red-500 text-red-500 hover:bg-red-50 tracking-[0.2em] text-[10px] h-10 w-full"
+            className="rounded-none border-red-500 text-red-500 hover:bg-red-50 tracking-widest text-[10px] h-10 w-full font-light"
           >
             <RefreshCcw className="w-3 h-3 mr-2" /> RE-SYNC COLLECTION
           </Button>
@@ -161,7 +161,7 @@ export default function ListPage() {
 
             {/* Contador de resultados */}
             <div className="flex mt-4">
-              <span className="text-[10px] text-black font-bold uppercase tracking-[0.3em]">
+              <span className="text-[10px] text-black font-light uppercase tracking-widest">
                 {products.length} RESULTS
               </span>
               {searchError && (
