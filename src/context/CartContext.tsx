@@ -14,13 +14,20 @@ interface CartItem {
   colorName: string;
   capacity: string;
   price: number;
+  quantity: number;
 }
 
 interface CartContextType {
   cartItems: CartItem[];
   cartCount: number;
-  addToCart: (item: CartItem) => void;
+  addToCart: (item: Omit<CartItem, 'quantity'>) => void;
   removeFromCart: (productId: string, colorName: string, capacity: string) => void;
+  updateQuantity: (
+    productId: string,
+    colorName: string,
+    capacity: string,
+    delta: number,
+  ) => void;
   clearCart: () => void;
 }
 
@@ -39,6 +46,8 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     }
   });
 
+  const cartCount = cartItems.reduce((acc, item) => acc + item.quantity, 0);
+
   useEffect(() => {
     try {
       localStorage.setItem('cart', JSON.stringify(cartItems));
@@ -47,8 +56,48 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     }
   }, [cartItems]);
 
-  const addToCart = (item: CartItem) => {
-    setCartItems((prev) => [...prev, item]);
+  const addToCart = (newItem: Omit<CartItem, 'quantity'>) => {
+    setCartItems((prevCart) => {
+      const itemExists = prevCart.find(
+        (item) =>
+          item.id === newItem.id &&
+          item.colorName === newItem.colorName &&
+          item.capacity === newItem.capacity,
+      );
+
+      if (itemExists) {
+        return prevCart.map((item) =>
+          item === itemExists
+            ? { ...item, quantity: item.quantity + 1 }
+            : item,
+        );
+      } else {
+        return [...prevCart, { ...newItem, quantity: 1 }];
+      }
+    });
+  };
+
+  const updateQuantity = (
+    productId: string,
+    colorName: string,
+    capacity: string,
+    delta: number,
+  ) => {
+    setCartItems((prev) => {
+      return prev
+        .map((item) => {
+          if (
+            item.id === productId &&
+            item.colorName === colorName &&
+            item.capacity === capacity
+          ) {
+            const newQty = item.quantity + delta;
+            return { ...item, quantity: newQty };
+          }
+          return item;
+        })
+        .filter((item) => item.quantity > 0);
+    });
   };
 
   const removeFromCart = (
@@ -56,21 +105,16 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     colorName: string,
     capacity: string,
   ) => {
-    setCartItems((prev) => {
-      // Encontramos el índice del primer elemento que coincida para borrar solo UNO
-      const index = prev.findIndex(
+    setCartItems((prev) =>
+      prev.filter(
         (item) =>
-          item.id === productId &&
-          item.colorName === colorName &&
-          item.capacity === capacity,
-      );
-      if (index !== -1) {
-        const newCart = [...prev];
-        newCart.splice(index, 1);
-        return newCart;
-      }
-      return prev;
-    });
+          !(
+            item.id === productId &&
+            item.colorName === colorName &&
+            item.capacity === capacity
+          ),
+      ),
+    );
   };
 
   const clearCart = () => {
@@ -81,9 +125,10 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
     <CartContext.Provider
       value={{
         cartItems,
-        cartCount: cartItems.length,
+        cartCount,
         addToCart,
         removeFromCart,
+        updateQuantity,
         clearCart,
       }}
     >

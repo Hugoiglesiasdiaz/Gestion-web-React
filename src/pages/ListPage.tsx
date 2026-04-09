@@ -20,7 +20,7 @@ export interface Product {
  * Grid de Skeletons refinado
  */
 const LoadingGrid: React.FC = () => (
-  <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-0">
+  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-0">
     {Array.from({ length: 10 }).map((_, i) => (
       <div
         key={i}
@@ -120,13 +120,13 @@ export default function ListPage() {
           <AlertTitle className="uppercase tracking-widest text-xs font-light">
             System Failure
           </AlertTitle>
-          <AlertDescription className="text-gray-500 text-[11px] mt-2 mb-4">
+          <AlertDescription className="text-gray-600 text-xs mt-2 mb-4">
             {error} Please check your connection to the mobile inventory API.
           </AlertDescription>
           <Button
             variant="outline"
             onClick={() => window.location.reload()}
-            className="rounded-none border-red-500 text-red-500 hover:bg-red-50 tracking-widest text-[10px] h-10 w-full font-light"
+            className="rounded-none border-red-500 text-red-500 hover:bg-red-50 tracking-widest text-xs h-10 w-full font-light"
           >
             <RefreshCcw className="w-3 h-3 mr-2" /> RE-SYNC COLLECTION
           </Button>
@@ -138,19 +138,22 @@ export default function ListPage() {
   return (
     <div className="min-h-screen bg-white w-full selection:bg-black selection:text-white pb-40 font-sans">
       {/* 1440px Max-Width Wrapper Container */}
-      <div className="max-w-[1440px] mx-auto px-10">
+      <div className="max-w-screen-xl mx-auto px-4 md:px-6">
         {/* Luxury Navigation Header - Identity Exacta Foto 2 */}
         <nav className="pt-24 pb-16 flex flex-col bg-transparent">
+          <h1 className="sr-only">MBST - Mobile Store Catalog</h1>
           {/* High Clarity Search Bar - Exact Identity Foto 2 */}
           <div className="w-full relative group my-6">
             <div className="relative w-full">
+              <label htmlFor="search-input" className="sr-only">Search products</label>
               <input
                 id="search-input"
                 type="text"
                 value={searchQuery}
                 onChange={handleSearchChange}
                 placeholder="Search for a smartphone..."
-                className="w-full bg-transparent border-t-0 border-x-0 border-b border-gray-200 py-6 text-4xl font-thin placeholder:text-gray-300 focus:ring-0 focus:border-black outline-none rounded-none px-0"
+                aria-label="Search for a smartphone"
+                className="w-full bg-transparent border-t-0 border-x-0 border-b border-gray-200 py-6 text-2xl md:text-4xl font-thin placeholder:text-gray-300 focus:ring-0 focus:border-black outline-none rounded-none px-0"
               />
               <div className="absolute right-0 top-1/2 -translate-y-1/2">
                 {searching && (
@@ -160,12 +163,12 @@ export default function ListPage() {
             </div>
 
             {/* Contador de resultados */}
-            <div className="flex mt-4">
-              <span className="text-[10px] text-black font-light uppercase tracking-widest">
+            <div className="flex mt-4" aria-live="polite">
+              <span className="text-xs text-black font-light uppercase tracking-widest">
                 {products.length} RESULTS
               </span>
               {searchError && (
-                <span className="text-red-400 text-xs animate-pulse ml-4">
+                <span className="text-red-500 text-xs animate-pulse ml-4" role="alert">
                   {searchError}
                 </span>
               )}
@@ -179,12 +182,12 @@ export default function ListPage() {
             <LoadingGrid />
           ) : products.length === 0 ? (
             <div className="py-60 text-center flex flex-col items-center justify-center space-y-4">
-              <p className="text-[10px] uppercase tracking-[0.5em] text-gray-300 font-extralight">
+              <p className="text-xs uppercase tracking-[0.5em] text-gray-500 font-extralight">
                 NO MATCHING MODELS AVAILABLE
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-0 bg-white border-t border-gray-100">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-0 bg-white border-t border-gray-100">
               {products.map((product, index) => (
                 <Link
                   key={`${product.id}-${index}`}

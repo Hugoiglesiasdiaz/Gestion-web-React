@@ -7,7 +7,7 @@ export default function Header() {
 
   return (
     <header className="fixed top-0 left-0 w-full bg-white z-50 border-b border-gray-100 h-20">
-      <div className="max-w-[1440px] mx-auto h-full px-10 flex justify-between items-center">
+      <div className="max-w-screen-xl mx-auto h-full px-4 md:px-6 flex justify-between items-center">
         {/* Logo Inicio */}
         <Link
           to="/"
@@ -19,11 +19,12 @@ export default function Header() {
         {/* Icono Carrito */}
         <Link
           to="/cart"
-          className="relative group cursor-pointer hover:opacity-70 transition-opacity"
+          className="relative group cursor-pointer hover:opacity-70 transition-opacity p-2"
+          aria-label={`View shopping bag, ${cartCount} items`}
         >
           <ShoppingBag className="w-6 h-6 text-black stroke-[1.5px]" />
           {cartCount > 0 && (
-            <span className="absolute -top-1.5 -right-1.5 bg-black text-white text-[9px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-in zoom-in duration-300">
+            <span className="absolute top-0 right-0 bg-black text-white text-[10px] font-bold w-4 h-4 rounded-full flex items-center justify-center animate-in zoom-in duration-300">
               {cartCount}
             </span>
           )}

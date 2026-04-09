@@ -85,7 +85,11 @@ export default function DetailPage() {
     fetchProduct();
   }, [id]);
 
-  const handleAddToCart = () => {
+  const [addedFeedback, setAddedFeedback] = useState(false);
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
     if (product && selectedColor && selectedStorage) {
       addToCart({
         id: product.id,
@@ -96,13 +100,15 @@ export default function DetailPage() {
         capacity: selectedStorage.capacity,
         price: selectedStorage.price,
       });
+      setAddedFeedback(true);
+      setTimeout(() => setAddedFeedback(false), 3000);
     }
   };
 
   if (loading) {
     return (
       <div className="min-h-screen bg-white pb-32 pt-20">
-        <div className="max-w-[1440px] mx-auto px-10 lg:px-24">
+        <div className="max-w-screen-xl mx-auto px-4 md:px-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-32 mb-40">
             <div className="lg:col-span-7 aspect-square bg-gray-50 flex items-center justify-center">
               <Skeleton className="w-full h-full" />
@@ -174,33 +180,34 @@ export default function DetailPage() {
   return (
     <div className="min-h-screen bg-white font-sans selection:bg-black selection:text-white pb-32 pt-20">
       {/* Botón Atrás - Top Left */}
-      <div className="max-w-[1440px] mx-auto px-10 lg:px-24 pt-10 pb-6">
+      <div className="max-w-screen-xl mx-auto px-4 md:px-6 pt-10 pb-6">
         <Link
           to="/"
-          className="text-xs uppercase tracking-widest text-gray-400 hover:text-black transition-colors flex items-center group font-thin"
+          className="text-xs uppercase tracking-widest text-gray-500 hover:text-black transition-colors flex items-center group font-thin"
+          aria-label="Back to catalog"
         >
           <ArrowLeft className="w-3.5 h-3.5 mr-2 stroke-[1px] group-hover:-translate-x-1 transition-transform" />
           BACK
         </Link>
       </div>
 
-      <main className="max-w-[1440px] mx-auto px-10 lg:px-24">
+      <main className="max-w-screen-xl mx-auto px-4 md:px-6">
         {/* Bloque de Compra (Imagen + Info) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 lg:gap-32 items-start mb-40">
-          {/* Imagen Central (Columna Izquierda 7/12) */}
-          <div className="lg:col-span-7 flex items-center justify-center bg-white aspect-square lg:aspect-auto h-auto lg:h-[700px] overflow-hidden p-20">
+        <div className="flex flex-col md:flex-row gap-16 lg:gap-32 items-start mb-40">
+          {/* Imagen Central */}
+          <div className="w-full md:w-7/12 flex items-center justify-center bg-white aspect-square h-auto lg:h-[700px] overflow-hidden p-6 md:p-20">
             <img
               src={selectedColor?.imageUrl || ''}
-              alt={product.name}
+              alt={`Smartphone ${product.brand} ${product.name} in color ${selectedColor?.name || ''}`}
               className="w-full h-full object-contain mix-blend-multiply"
             />
           </div>
 
-          {/* Columna Info (Derecha 5/12) */}
-          <div className="lg:col-span-5 space-y-12">
+          {/* Columna Info */}
+          <div className="w-full md:w-5/12 space-y-12">
             {/* Título y Precio */}
             <header className="space-y-4">
-              <h1 className="text-3xl font-extralight uppercase tracking-widest text-[#000000]">
+              <h1 className="text-2xl md:text-3xl font-extralight uppercase tracking-widest text-[#000000]">
                 {product.name}
               </h1>
               <p className="text-xl font-extralight text-[#000000] tracking-widest tabular-nums">
@@ -213,15 +220,18 @@ export default function DetailPage() {
 
             {/* Selector de Storage */}
             <div className="space-y-6">
-              <p className="text-[11px] font-extralight uppercase tracking-widest text-[#000000]">
+              <p className="text-xs font-extralight uppercase tracking-widest text-[#000000]">
                 STORAGE. ¿HOW MUCH SPACE DO YOU NEED?
               </p>
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-3 gap-3" role="radiogroup" aria-label="Select storage capacity">
                 {product.storageOptions.map((opt) => (
                   <button
                     key={opt.capacity}
                     onClick={() => setSelectedStorage(opt)}
-                    className={`border px-4 py-8 text-[11px] uppercase tracking-widest transition-colors font-extralight ${
+                    aria-checked={selectedStorage?.capacity === opt.capacity}
+                    role="radio"
+                    aria-label={`${opt.capacity} of storage`}
+                    className={`border px-4 py-8 text-xs uppercase tracking-widest transition-colors font-extralight ${
                       selectedStorage?.capacity === opt.capacity
                         ? 'border-[#000000] border-[1.5px]'
                         : 'border-gray-100 hover:border-gray-400'
@@ -235,16 +245,19 @@ export default function DetailPage() {
 
             {/* Selector de Color */}
             <div className="space-y-6">
-              <p className="text-[11px] font-extralight uppercase tracking-widest text-[#000000]">
-                COLOR. PICK YOUR FAVOURITE.
+              <p className="text-xs font-extralight uppercase tracking-widest text-[#000000]">
+                PICK YOUR FAVOURITE COLOR.
               </p>
               <div className="space-y-4">
-                <div className="flex gap-4">
+                <div className="flex gap-4" role="radiogroup" aria-label="Select product color">
                   {product.colorOptions.map((color) => (
                     <button
                       key={color.name}
                       onClick={() => setSelectedColor(color)}
-                      className={`w-6 h-6 rounded-full border p-0.5 transition-colors ${
+                      role="radio"
+                      aria-checked={color.name === selectedColor?.name}
+                      aria-label={`Color ${color.name}`}
+                      className={`w-8 h-8 rounded-full border p-1 transition-colors ${
                         color.name === selectedColor?.name
                           ? 'border-[#000000]'
                           : 'border-transparent hover:border-gray-200'
@@ -258,22 +271,35 @@ export default function DetailPage() {
                   ))}
                 </div>
                 {/* Nombre del color seleccionado - Única negrita permitida */}
-                <span className="text-[11px] text-[#000000] font-light uppercase tracking-widest block">
+                <span className="text-xs text-[#000000] font-light uppercase tracking-widest block">
                   {selectedColor?.name}
                 </span>
               </div>
             </div>
 
             {/* Botón Añadir */}
-            <button
-              onClick={handleAddToCart}
-              className="w-full bg-[#000000] text-white py-6 uppercase text-[12px] tracking-widest font-extralight hover:bg-neutral-900 transition-colors"
-            >
-              Añadir
-            </button>
+            <div className="relative">
+              <button
+                onClick={handleAddToCart}
+                disabled={addedFeedback}
+                className={`w-full py-6 uppercase text-xs tracking-widest transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-black outline-none ${
+                  addedFeedback 
+                    ? 'bg-green-600 text-white cursor-default' 
+                    : 'bg-[#000000] text-white hover:bg-neutral-900'
+                }`}
+                aria-label={addedFeedback ? "Item added to bag" : `Add ${product.name} ${selectedColor?.name} ${selectedStorage?.capacity} to cart`}
+              >
+                {addedFeedback ? 'Added!' : 'Add to cart'}
+              </button>
+              
+              {/* Region aria-live para lectores de pantalla */}
+              <div className="sr-only" aria-live="polite">
+                {addedFeedback ? `${product.name} has been added to your bag.` : ''}
+              </div>
+            </div>
 
             {/* Descripción suave abajo */}
-            <p className="text-[12px] font-extralight leading-relaxed text-gray-500 uppercase tracking-widest pt-4">
+            <p className="text-xs font-extralight leading-relaxed text-gray-600 uppercase tracking-widest pt-4">
               {product.description}
             </p>
           </div>
@@ -288,12 +314,12 @@ export default function DetailPage() {
             {specsList.map((spec) => (
               <div
                 key={spec.label}
-                className={`flex py-5 border-t-[0.5px] border-gray-300 ${spec.label === 'DESCRIPTION' ? 'items-start' : 'items-center'}`}
+                className={`flex py-3 md:py-5 border-t-[0.5px] border-gray-300 ${spec.label === 'DESCRIPTION' ? 'items-start' : 'items-center'}`}
               >
-                <div className="w-1/3 text-[10px] font-light uppercase text-black">
+                <div className="w-1/3 text-xs font-light uppercase text-black">
                   {spec.label}
                 </div>
-                <div className="flex-1 text-[11px] font-light text-gray-900">
+                <div className="flex-1 text-xs font-light text-gray-800">
                   {spec.value || '-'}
                 </div>
               </div>
