@@ -60,8 +60,9 @@ Pipeline de integración continua configurado en **GitHub Actions**:
 
 2.  **Instalar dependencias:**
     ```bash
-    npm install
+    npm install --legacy-peer-deps
     ```
+> **Nota:** Se requiere el flag `--legacy-peer-deps` debido a un conflicto de dependencias entre los plugins de ESLint y las versiones más recientes de React, asegurando así una instalación limpia y estable.
 
 3.  **Configurar variables de entorno:**
     Copia el archivo de ejemplo y añade tu clave de API:
