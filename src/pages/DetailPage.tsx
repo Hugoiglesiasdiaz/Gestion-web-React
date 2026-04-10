@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, type MouseEvent } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { phoneService } from '../services/phoneService';
@@ -6,45 +6,11 @@ import { useCart } from '../context/CartContext';
 import { Skeleton } from '@/components/ui/skeleton';
 import ProductCard from '@/components/ProductCard';
 
-interface ColorOption {
-  name: string;
-  hexCode: string;
-  imageUrl: string;
-}
-
-interface StorageOption {
-  capacity: string;
-  price: number;
-}
-
-interface Specs {
-  screen: string;
-  resolution: string;
-  processor: string;
-  mainCamera: string;
-  selfieCamera: string;
-  battery: string;
-  os: string;
-  screenRefreshRate: string;
-}
-
-interface Product {
-  id: string;
-  brand: string;
-  name: string;
-  description: string;
-  basePrice: number;
-  specs: Specs;
-  colorOptions: ColorOption[];
-  storageOptions: StorageOption[];
-  similarProducts: {
-    id: string;
-    brand: string;
-    name: string;
-    basePrice: number;
-    imageUrl: string;
-  }[];
-}
+import type { Product, ColorOption, StorageOption } from '@/types';
+import { formatPrice } from '@/lib/format';
+import { SpecRow } from '@/components/atoms/SpecRow';
+import { VariantSelector } from '@/components/molecules/VariantSelector';
+import { ProductPurchaseActions } from '@/components/organisms/ProductPurchaseActions';
 
 export default function DetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -87,7 +53,7 @@ export default function DetailPage() {
 
   const [addedFeedback, setAddedFeedback] = useState(false);
 
-  const handleAddToCart = (e: React.MouseEvent) => {
+  const handleAddToCart = (e: MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     if (product && selectedColor && selectedStorage) {
@@ -211,92 +177,50 @@ export default function DetailPage() {
                 {product.name}
               </h1>
               <p className="text-xl font-extralight text-[#000000] tracking-widest tabular-nums">
-                {selectedStorage?.price.toLocaleString('es-ES', {
-                  minimumFractionDigits: 2,
-                })}{' '}
-                EUR
+                {formatPrice(selectedStorage?.price || 0)} EUR
               </p>
             </header>
 
             {/* Selector de Storage */}
-            <div className="space-y-6">
-              <p className="text-xs font-extralight uppercase tracking-widest text-[#000000]">
-                STORAGE. ¿HOW MUCH SPACE DO YOU NEED?
-              </p>
-              <div className="grid grid-cols-3 gap-3" role="radiogroup" aria-label="Select storage capacity">
-                {product.storageOptions.map((opt) => (
-                  <button
-                    key={opt.capacity}
-                    onClick={() => setSelectedStorage(opt)}
-                    aria-checked={selectedStorage?.capacity === opt.capacity}
-                    role="radio"
-                    aria-label={`${opt.capacity} of storage`}
-                    className={`border px-4 py-8 text-xs uppercase tracking-widest transition-colors font-extralight ${
-                      selectedStorage?.capacity === opt.capacity
-                        ? 'border-[#000000] border-[1.5px]'
-                        : 'border-gray-100 hover:border-gray-400'
-                    }`}
-                  >
-                    {opt.capacity}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <VariantSelector
+              title="STORAGE. ¿HOW MUCH SPACE DO YOU NEED?"
+              type="grid"
+              options={product.storageOptions.map((opt) => ({
+                id: opt.capacity,
+                label: opt.capacity,
+              }))}
+              selectedId={selectedStorage?.capacity || ''}
+              onSelect={(id) => {
+                const opt = product.storageOptions.find(
+                  (o) => o.capacity === id,
+                );
+                if (opt) setSelectedStorage(opt);
+              }}
+            />
 
             {/* Selector de Color */}
-            <div className="space-y-6">
-              <p className="text-xs font-extralight uppercase tracking-widest text-[#000000]">
-                PICK YOUR FAVOURITE COLOR.
-              </p>
-              <div className="space-y-4">
-                <div className="flex gap-4" role="radiogroup" aria-label="Select product color">
-                  {product.colorOptions.map((color) => (
-                    <button
-                      key={color.name}
-                      onClick={() => setSelectedColor(color)}
-                      role="radio"
-                      aria-checked={color.name === selectedColor?.name}
-                      aria-label={`Color ${color.name}`}
-                      className={`w-8 h-8 rounded-full border p-1 transition-colors ${
-                        color.name === selectedColor?.name
-                          ? 'border-[#000000]'
-                          : 'border-transparent hover:border-gray-200'
-                      }`}
-                    >
-                      <div
-                        className="w-full h-full rounded-full"
-                        style={{ backgroundColor: color.hexCode }}
-                      />
-                    </button>
-                  ))}
-                </div>
-                {/* Nombre del color seleccionado - Única negrita permitida */}
-                <span className="text-xs text-[#000000] font-light uppercase tracking-widest block">
-                  {selectedColor?.name}
-                </span>
-              </div>
-            </div>
+            <VariantSelector
+              title="PICK YOUR FAVOURITE COLOR."
+              type="rounded"
+              options={product.colorOptions.map((color) => ({
+                id: color.name,
+                color: color.hexCode,
+              }))}
+              selectedId={selectedColor?.name || ''}
+              onSelect={(id) => {
+                const color = product.colorOptions.find((c) => c.name === id);
+                if (color) setSelectedColor(color);
+              }}
+            />
 
             {/* Botón Añadir */}
-            <div className="relative">
-              <button
-                onClick={handleAddToCart}
-                disabled={addedFeedback}
-                className={`w-full py-6 uppercase text-xs tracking-widest transition-colors focus:ring-2 focus:ring-offset-2 focus:ring-black outline-none ${
-                  addedFeedback 
-                    ? 'bg-green-600 text-white cursor-default' 
-                    : 'bg-[#000000] text-white hover:bg-neutral-900'
-                }`}
-                aria-label={addedFeedback ? "Item added to bag" : `Add ${product.name} ${selectedColor?.name} ${selectedStorage?.capacity} to cart`}
-              >
-                {addedFeedback ? 'Added!' : 'Add to cart'}
-              </button>
-              
-              {/* Region aria-live para lectores de pantalla */}
-              <div className="sr-only" aria-live="polite">
-                {addedFeedback ? `${product.name} has been added to your bag.` : ''}
-              </div>
-            </div>
+            <ProductPurchaseActions
+              onAddToCart={handleAddToCart}
+              isAdded={addedFeedback}
+              productName={product.name}
+              selectedColor={selectedColor?.name}
+              selectedStorage={selectedStorage?.capacity}
+            />
 
             {/* Descripción suave abajo */}
             <p className="text-xs font-extralight leading-relaxed text-gray-600 uppercase tracking-widest pt-4">
@@ -312,17 +236,7 @@ export default function DetailPage() {
           </h2>
           <div className="w-full space-y-0">
             {specsList.map((spec) => (
-              <div
-                key={spec.label}
-                className={`flex py-3 md:py-5 border-t-[0.5px] border-gray-300 ${spec.label === 'DESCRIPTION' ? 'items-start' : 'items-center'}`}
-              >
-                <div className="w-1/3 text-xs font-light uppercase text-black">
-                  {spec.label}
-                </div>
-                <div className="flex-1 text-xs font-light text-gray-800">
-                  {spec.value || '-'}
-                </div>
-              </div>
+              <SpecRow key={spec.label} label={spec.label} value={spec.value} />
             ))}
             <div className="border-t-[0.5px] border-gray-300"></div>
           </div>

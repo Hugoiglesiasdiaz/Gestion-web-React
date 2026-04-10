@@ -1,25 +1,27 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  type FC,
+  type ChangeEvent,
+} from 'react';
 import { Link } from 'react-router-dom';
 import { phoneService } from '@/services/phoneService';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import { Loader2, AlertCircle, RefreshCcw } from 'lucide-react';
+import { AlertCircle, RefreshCcw } from 'lucide-react';
 
 import ProductCard from '@/components/ProductCard';
 
-export interface Product {
-  id: string;
-  brand: string;
-  name: string;
-  basePrice: number;
-  imgUrl: string;
-}
+import type { ListProduct } from '@/types';
+import { SearchBar } from '@/components/molecules/SearchBar';
 
 /**
  * Grid de Skeletons refinado
  */
-const LoadingGrid: React.FC = () => (
+const LoadingGrid: FC = () => (
   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-0">
     {Array.from({ length: 10 }).map((_, i) => (
       <div
@@ -33,7 +35,7 @@ const LoadingGrid: React.FC = () => (
 );
 
 export default function ListPage() {
-  const [products, setProducts] = useState<Product[]>([]);
+  const [products, setProducts] = useState<ListProduct[]>([]);
   const [loading, setLoading] = useState(true);
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -98,7 +100,7 @@ export default function ListPage() {
     }
   }, []);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setSearchQuery(value);
     if (debounceTimerRef.current) window.clearTimeout(debounceTimerRef.current);
@@ -143,37 +145,13 @@ export default function ListPage() {
         <nav className="pt-24 pb-16 flex flex-col bg-transparent">
           <h1 className="sr-only">MBST - Mobile Store Catalog</h1>
           {/* High Clarity Search Bar - Exact Identity Foto 2 */}
-          <div className="w-full relative group my-6">
-            <div className="relative w-full">
-              <label htmlFor="search-input" className="sr-only">Search products</label>
-              <input
-                id="search-input"
-                type="text"
-                value={searchQuery}
-                onChange={handleSearchChange}
-                placeholder="Search for a smartphone..."
-                aria-label="Search for a smartphone"
-                className="w-full bg-transparent border-t-0 border-x-0 border-b border-gray-200 py-6 text-2xl md:text-4xl font-thin placeholder:text-gray-300 focus:ring-0 focus:border-black outline-none rounded-none px-0"
-              />
-              <div className="absolute right-0 top-1/2 -translate-y-1/2">
-                {searching && (
-                  <Loader2 className="w-6 h-6 animate-spin text-gray-200" />
-                )}
-              </div>
-            </div>
-
-            {/* Contador de resultados */}
-            <div className="flex mt-4" aria-live="polite">
-              <span className="text-xs text-black font-light uppercase tracking-widest">
-                {products.length} RESULTS
-              </span>
-              {searchError && (
-                <span className="text-red-500 text-xs animate-pulse ml-4" role="alert">
-                  {searchError}
-                </span>
-              )}
-            </div>
-          </div>
+          <SearchBar
+            searchQuery={searchQuery}
+            onSearchChange={handleSearchChange}
+            searching={searching}
+            resultsCount={products.length}
+            searchError={searchError}
+          />
         </nav>
 
         {/* Global Catalog Area */}
