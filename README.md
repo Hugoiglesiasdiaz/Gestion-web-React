@@ -1,73 +1,90 @@
-# React + TypeScript + Vite
+# 📱 Mobile Store - Premium E-commerce Experience
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![CI Status](https://github.com/Hugoiglesiasdiaz/Gestion-web-React/actions/workflows/automatizacion.yml/badge.svg)
+[![Vercel](https://img.shields.io/badge/Vercel-Deploy-black?style=flat&logo=vercel)](https://gestion-web-react.vercel.app)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-3178C6?style=flat&logo=typescript)](https://www.typescriptlang.org/)
 
-Currently, two official plugins are available:
+Una aplicación de comercio electrónico de alto rendimiento diseñada con un enfoque **Mobile-First**, priorizando la estética premium, la accesibilidad y la robustez técnica.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Demo en Vivo
+Puedes ver el proyecto desplegado aquí: **[Ver Demo en Vercel](https://gestion-web-react.vercel.app)**
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Tech Stack & Arquitectura
 
-## Expanding the ESLint configuration
+El proyecto se ha construido bajo principios de **Clean Code** y **Arquitectura Atómica**:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+* **Frontend:** React 19 con Vite para una experiencia de desarrollo ultra-rápida.
+* **Estilos:** Tailwind CSS, utilizando una paleta minimalista y tipografías ligeras.
+* **Gestión de Estado:** Context API con persistencia automática en `LocalStorage`.
+* **Testing:** Vitest y React Testing Library para asegurar la fiabilidad de los componentes.
+* **Seguridad:** Dependencias auditadas (0 vulnerabilidades críticas).
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### Estructura Atómica
+Para garantizar la escalabilidad, los componentes se dividen en:
+-   **Atoms:** Componentes básicos (Botones, Badges, Inputs).
+-   **Molecules:** Combinación de átomos (SearchBar, Selector de Variantes).
+-   **Organisms:** Secciones complejas (ProductCard, CartSummary).
+-   **Pages:** Orquestadores de la lógica de negocio y vistas principales.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## ✨ Características Destacadas
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 🛒 Gestión Avanzada de Carrito
+-   **Agrupación Inteligente:** Los productos duplicados se agrupan automáticamente, incrementando su cantidad en lugar de crear nuevas entradas.
+-   **Sincronización Atómica:** Manejo de estado funcional para evitar *race conditions* en las actualizaciones de cantidad.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### ♿ Accesibilidad (A11y) & SEO
+-   **Lighthouse 100/100:** Optimización completa en accesibilidad y buenas prácticas.
+-   **Image Optimization:** Carga diferida y manejo de fallos en imágenes de la API.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 🧪 CI/CD & Calidad
+Pipeline de integración continua configurado en **GitHub Actions**:
+1.  **Linting:** Verificación de reglas de estilo.
+2.  **Unit Tests:** Validación de lógica de negocio (formateo de precios, cálculos).
+3.  **Component Tests:** Verificación de interacciones de usuario.
+4.  **Build Check:** Garantía de que la aplicación compila correctamente para producción.
+
+---
+
+## 📦 Instalación y Uso
+
+1.  **Clonar el repositorio:**
+    ```bash
+    git clone https://github.com/Hugoiglesiasdiaz/Gestion-web-React.git
+    cd Gestion-web-React
+    ```
+
+2.  **Instalar dependencias:**
+    ```bash
+    npm install --legacy-peer-deps
+    ```
+> **Nota:** Se requiere el flag `--legacy-peer-deps` debido a un conflicto de dependencias entre los plugins de ESLint y las versiones más recientes de React, asegurando así una instalación limpia y estable.
+
+3.  **Configurar variables de entorno:**
+    Copia el archivo de ejemplo y añade tu clave de API:
+    ```bash
+    cp .env.example .env
+    ```
+
+4.  **Ejecutar en desarrollo:**
+    ```bash
+    npm run dev
+    ```
+
+5.  **Ejecutar tests:**
+    ```bash
+    npm run test:run
+    ```
+
+---
+
+## 🛡️ Auditoría de Seguridad
+Este proyecto ha sido parcheado contra vulnerabilidades comunes (CVEs en Axios/Vite).
+```bash
+# Estado actual:
+found 0 vulnerabilities
 ```
