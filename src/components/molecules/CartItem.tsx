@@ -48,7 +48,7 @@ export const CartItem: React.FC<CartItemProps> = ({
         </div>
 
         {/* Price & Remove */}
-        <div className="flex flex-row md:flex-col justify-between items-center md:items-end w-full md:w-auto mt-4 md:mt-0">
+        <div className="flex flex-col md:flex-col justify-between items-end md:items-end w-full md:w-auto mt-4 md:mt-0 space-y-4 md:space-y-4">
           <div className="flex flex-col items-end space-y-2">
             <span className="text-sm font-light tracking-widest text-black tabular-nums">
               {formatPrice(item.price * item.quantity)} EUR
@@ -73,10 +73,10 @@ export const CartItem: React.FC<CartItemProps> = ({
           <button
             onClick={() => onRemove(item.id, item.colorName, item.capacity)}
             aria-label={`Remove ${item.name} ${item.colorName} from bag`}
-            className="text-xs uppercase tracking-widest text-gray-400 hover:text-black mt-4 transition-colors flex items-center"
+            className="text-xs uppercase tracking-widest text-gray-400 hover:text-black transition-colors flex items-center group/remove"
           >
-            <X className="w-3.5 h-3.5 mr-1 stroke-[1.5px]" />
-            Remove
+            <X className="w-3 h-3 mr-1.5 stroke-[1.5px] -translate-y-[0.5px] group-hover/remove:text-black" />
+            <span className="leading-none pt-[1px]">Remove</span>
           </button>
         </div>
       </div>
