@@ -1,19 +1,38 @@
-import React from 'react';
+import type { FC } from 'react';
 
-export interface Product {
-  id: string;
-  brand: string;
-  name: string;
-  basePrice: number;
-  imageUrl?: string;
-  imgUrl?: string; // Standardize based on API variety
+import type { ListProduct } from '@/types';
+import { formatPrice } from '@/lib/format';
+
+// Support both API structures (imageUrl from Detail/Similar vs imgUrl from List)
+interface ProductCardProps {
+  phone:
+    | ListProduct
+    | {
+        id: string;
+        brand: string;
+        name: string;
+        basePrice: number;
+        imageUrl: string;
+      };
+  onClick?: () => void;
 }
 
-const ProductCard: React.FC<{ phone: Product }> = ({ phone }) => {
-  const displayImage = phone.imageUrl || phone.imgUrl;
+const ProductCard: FC<ProductCardProps> = ({ phone, onClick }) => {
+  const displayImage = 'imgUrl' in phone ? phone.imgUrl : phone.imageUrl;
 
   return (
-    <div className="group relative overflow-hidden bg-white border-[0.5px] border-gray-100 flex flex-col cursor-pointer h-full px-5 pt-5 pb-6 transition-colors duration-500">
+    <div
+      onClick={onClick}
+      onKeyDown={(e) => {
+        if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault();
+          onClick();
+        }
+      }}
+      role="button"
+      tabIndex={0}
+      className="group relative overflow-hidden bg-white border-[0.5px] border-gray-100 flex flex-col cursor-pointer h-full px-5 pt-5 pb-6 transition-colors duration-500"
+    >
       {/* Div de fondo que sube */}
       <div className="absolute inset-0 bg-black transition-transform duration-500 ease-in-out translate-y-full group-hover:translate-y-0 z-0" />
 
@@ -40,10 +59,7 @@ const ProductCard: React.FC<{ phone: Product }> = ({ phone }) => {
             </span>
           </div>
           <span className="text-sm text-black group-hover:text-white transition-colors duration-500 font-light tabular-nums tracking-widest">
-            {phone.basePrice.toLocaleString('es-ES', {
-              minimumFractionDigits: 2,
-            })}{' '}
-            EUR
+            {formatPrice(phone.basePrice)} EUR
           </span>
         </div>
       </div>

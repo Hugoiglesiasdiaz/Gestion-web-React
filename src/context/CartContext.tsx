@@ -6,22 +6,17 @@ import {
   type ReactNode,
 } from 'react';
 
-interface CartItem {
-  id: string;
-  name: string;
-  brand: string;
-  imageUrl: string;
-  colorName: string;
-  capacity: string;
-  price: number;
-  quantity: number;
-}
+import type { CartItem } from '@/types';
 
 interface CartContextType {
   cartItems: CartItem[];
   cartCount: number;
   addToCart: (item: Omit<CartItem, 'quantity'>) => void;
-  removeFromCart: (productId: string, colorName: string, capacity: string) => void;
+  removeFromCart: (
+    productId: string,
+    colorName: string,
+    capacity: string,
+  ) => void;
   updateQuantity: (
     productId: string,
     colorName: string,
@@ -67,9 +62,7 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({
 
       if (itemExists) {
         return prevCart.map((item) =>
-          item === itemExists
-            ? { ...item, quantity: item.quantity + 1 }
-            : item,
+          item === itemExists ? { ...item, quantity: item.quantity + 1 } : item,
         );
       } else {
         return [...prevCart, { ...newItem, quantity: 1 }];
