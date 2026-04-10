@@ -1,6 +1,5 @@
 # 📱 Mobile Store - Premium E-commerce Experience
 
-MUY IMPORTANTE COMPROBAR LINKS
 ![CI Status](https://github.com/Hugoiglesiasdiaz/Gestion-web-React/actions/workflows/automatizacion.yml/badge.svg)
 [![Vercel](https://img.shields.io/badge/Vercel-Deploy-black?style=flat&logo=vercel)](https://gestion-web-react.vercel.app)
 [![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react)](https://react.dev/)
